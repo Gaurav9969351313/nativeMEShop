@@ -1,9 +1,12 @@
 var express = require("express");
 var morgan = require("morgan");
 var mongoose = require('mongoose'); 
-var User = require('./models/user');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var flash = require('express-flash');
+var MongoStore = require('connect-mongo/es5')(session);
+var passport = require('passport');
 
 var ejs = require('ejs');
 var engine = require('ejs-mate');
@@ -15,13 +18,25 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: 'gaurav123456',
+  store: new MongoStore({ url: 'mongodb://root:sss*123@ds133044.mlab.com:33044/ecommerece', autoReconnect: true})
+}));
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 
 var mainRoutes = require('./routes/main');
+var userRoutes = require('./routes/users');
 
-app.use('/main',mainRoutes);
+app.use(mainRoutes);
+app.use(userRoutes);
 
 //mlab gauravtalele1994 gauravtalele2015@gmail.com gauravtalele*123
 
@@ -34,19 +49,7 @@ mongoose.connection.openUri('mongodb://root:sss*123@ds133044.mlab.com:33044/ecom
   }
 });
 
-app.post('/createuser',function(req,res,next){
-	//while testing it on postman use xxx-urlencoded body to send
-	var user = new User();
-	user.profile.name = req.body.name;
-	user.password = req.body.password;
-	user.email = req.body.email;
 
-	user.save(function(err){
-		if(err) throw err;
-		res.json("user Created Sucessfully...!");
-	})
-
-})
 
 app.use(morgan('dev'));
 
