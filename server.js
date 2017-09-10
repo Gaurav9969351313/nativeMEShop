@@ -5,6 +5,9 @@ var User = require('./models/user');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
+var ejs = require('ejs');
+var engine = require('ejs-mate');
+
 var app = express();
 
 app.use(express.static(__dirname + '/public'));
@@ -12,6 +15,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.engine('ejs', engine);
+app.set('view engine', 'ejs');
 
 //mlab gauravtalele1994 gauravtalele2015@gmail.com gauravtalele*123
 
@@ -49,5 +55,6 @@ app.listen(3000,function(error){
 
 app.get('/',function(req,res){
 	var name = "Shree Swami Samartha";
-	res.json("My Guru Is :- " + name);
+	//res.json("My Guru Is :- " + name);
+	res.render('home')
 })
