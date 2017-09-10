@@ -19,6 +19,10 @@ app.use(cookieParser());
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 
+var mainRoutes = require('./routes/main');
+
+app.use('/main',mainRoutes);
+
 //mlab gauravtalele1994 gauravtalele2015@gmail.com gauravtalele*123
 
 
@@ -51,10 +55,4 @@ app.listen(3000,function(error){
  if(error) throw error;
 	console.log("Server is running on 3000 port");
 
-})
-
-app.get('/',function(req,res){
-	var name = "Shree Swami Samartha";
-	//res.json("My Guru Is :- " + name);
-	res.render('home')
 })
